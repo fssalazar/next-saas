@@ -32,11 +32,9 @@ export async function createOrganization(app: FastifyInstance) {
         },
       },
       async (request, reply) => {
-        console.log(request, `aaaaaaaaaaaaaaaaaaaaaaaaaaa`)
         const userId = await request.getCurrentUserId()
 
         const { name, domain, shouldAttachUsersByDomain } = request.body
-        console.log(userId, `aaaaaaaaaaaaaaaaaaaaaaaaaaa`)
         if (domain) {
           const organizationWithSameDomain =
             await prisma.organization.findUnique({
