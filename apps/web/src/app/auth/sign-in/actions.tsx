@@ -19,7 +19,13 @@ export async function signInWithEmailAndPassword(_: unknown, data: FormData) {
 
   if (!result.success) {
     const errors = result.error.flatten().fieldErrors
-    return { success: false, message: null, errors }
+    return {
+      success: false,
+      message: null,
+      errors,
+      email: data.get('email') as string,
+      password: data.get('password') as string,
+    }
   }
 
   const { email, password } = result.data
@@ -32,9 +38,27 @@ export async function signInWithEmailAndPassword(_: unknown, data: FormData) {
   } catch (error) {
     if (error instanceof AxiosError) {
       const err = error.response?.data
-      return { success: false, message: err.message, errors: null }
+      return {
+        success: false,
+        message: err.message,
+        errors: null,
+        email,
+        password,
+      }
     }
-    return { success: false, message: 'Something went wrong', errors: null }
+    return {
+      success: false,
+      message: 'Something went wrong',
+      errors: null,
+      email,
+      password,
+    }
   }
-  return { success: true, message: null, errors: null }
+  return {
+    success: true,
+    message: null,
+    errors: null,
+    email,
+    password,
+  }
 }

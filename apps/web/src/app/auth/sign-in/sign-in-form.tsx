@@ -10,27 +10,49 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 
 import { signInWithEmailAndPassword } from './actions'
+
+type FormState = {
+  success: boolean
+  message: string | null
+  errors: { email?: string[]; password?: string[] } | null
+  email: string
+  password: string
+}
+
 export function SignInForm() {
-  const [{ success, message, errors }, formAction, isPending] = useActionState(
+  const initialState: FormState = {
+    success: false,
+    message: null,
+    errors: null,
+    email: '',
+    password: '',
+  }
+  const [state, formAction, isPending] = useActionState<FormState, FormData>(
     signInWithEmailAndPassword,
-    { success: false, message: null, errors: null },
+    initialState,
   )
 
   return (
     <form action={formAction} className="space-y-4">
-      {success === false && message && (
+      {state.success === false && state.message && (
         <Alert variant="destructive">
           <AlertTriangle className="size-4" />
           <AlertTitle>Sign in failed</AlertTitle>
-          <AlertDescription>{message}</AlertDescription>
+          <AlertDescription>{state.message}</AlertDescription>
         </Alert>
       )}
       <div className="space-y-1">
         <Label htmlFor="email">Email</Label>
-        <Input type="email" id="email" name="email" placeholder="Email" />
-        {errors?.email && (
+        <Input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Email"
+          defaultValue={state.email}
+        />
+        {state.errors?.email && (
           <p className="text-sm text-red-500 dark:text-red-400">
-            {errors.email[0]}
+            {state.errors.email[0]}
           </p>
         )}
       </div>
@@ -41,10 +63,11 @@ export function SignInForm() {
           id="password"
           name="password"
           placeholder="Password"
+          defaultValue={state.password}
         />
-        {errors?.password && (
+        {state.errors?.password && (
           <p className="text-sm text-red-500 dark:text-red-400">
-            {errors.password[0]}
+            {state.errors.password[0]}
           </p>
         )}
         <Link
