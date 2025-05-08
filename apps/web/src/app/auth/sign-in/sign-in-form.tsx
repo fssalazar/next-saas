@@ -1,58 +1,36 @@
 'use client'
 import { AlertTriangle, Loader2 } from 'lucide-react'
 import Link from 'next/link'
-import { useActionState } from 'react'
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
+import { useFormState } from '@/hooks/use-form-state'
 
 import { signInWithEmailAndPassword } from './actions'
 
-type FormState = {
-  success: boolean
-  message: string | null
-  errors: { email?: string[]; password?: string[] } | null
-  email: string
-  password: string
-}
-
 export function SignInForm() {
-  const initialState: FormState = {
-    success: false,
-    message: null,
-    errors: null,
-    email: '',
-    password: '',
-  }
-  const [state, formAction, isPending] = useActionState<FormState, FormData>(
+  const [{ errors, message, success }, handleSubmit, isPending] = useFormState(
     signInWithEmailAndPassword,
-    initialState,
   )
 
   return (
-    <form action={formAction} className="space-y-4">
-      {state.success === false && state.message && (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {success === false && message && (
         <Alert variant="destructive">
           <AlertTriangle className="size-4" />
           <AlertTitle>Sign in failed</AlertTitle>
-          <AlertDescription>{state.message}</AlertDescription>
+          <AlertDescription>{message}</AlertDescription>
         </Alert>
       )}
       <div className="space-y-1">
         <Label htmlFor="email">Email</Label>
-        <Input
-          type="email"
-          id="email"
-          name="email"
-          placeholder="Email"
-          defaultValue={state.email}
-        />
-        {state.errors?.email && (
+        <Input type="email" id="email" name="email" placeholder="Email" />
+        {errors?.email && (
           <p className="text-sm text-red-500 dark:text-red-400">
-            {state.errors.email[0]}
+            {errors.email[0]}
           </p>
         )}
       </div>
@@ -63,11 +41,10 @@ export function SignInForm() {
           id="password"
           name="password"
           placeholder="Password"
-          defaultValue={state.password}
         />
-        {state.errors?.password && (
+        {errors?.password && (
           <p className="text-sm text-red-500 dark:text-red-400">
-            {state.errors.password[0]}
+            {errors.password[0]}
           </p>
         )}
         <Link

@@ -14,7 +14,7 @@ const signInSchema = z.object({
     .min(6, { message: 'Password must be at least 6 characters' }),
 })
 
-export async function signInWithEmailAndPassword(_: unknown, data: FormData) {
+export async function signInWithEmailAndPassword(data: FormData) {
   const result = signInSchema.safeParse(Object.fromEntries(data))
 
   if (!result.success) {
@@ -23,8 +23,6 @@ export async function signInWithEmailAndPassword(_: unknown, data: FormData) {
       success: false,
       message: null,
       errors,
-      email: data.get('email') as string,
-      password: data.get('password') as string,
     }
   }
 
