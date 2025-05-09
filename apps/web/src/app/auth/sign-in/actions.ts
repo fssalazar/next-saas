@@ -1,6 +1,8 @@
 'use server'
 
 import { AxiosError } from 'axios'
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
 import { signInWithPassword } from '@/http/sign-in-with-password'
@@ -33,6 +35,11 @@ export async function signInWithEmailAndPassword(data: FormData) {
       email,
       password,
     })
+
+    ;(await cookies()).set('token', token, {
+      maxAge: 60 * 60 * 24 * 30,
+      path: '/',
+    })
   } catch (error) {
     if (error instanceof AxiosError) {
       const err = error.response?.data
@@ -52,11 +59,6 @@ export async function signInWithEmailAndPassword(data: FormData) {
       password,
     }
   }
-  return {
-    success: true,
-    message: null,
-    errors: null,
-    email,
-    password,
-  }
+
+  redirect('/')
 }
