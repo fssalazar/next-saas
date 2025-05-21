@@ -1,6 +1,7 @@
 'use client'
 
 import { FormEvent, useState, useTransition } from 'react'
+import { requestFormReset } from 'react-dom'
 
 interface FormState {
   success: boolean
@@ -11,6 +12,7 @@ interface FormState {
 export function useFormState(
   action: (data: FormData) => Promise<FormState>,
   initialState?: FormState,
+  onSuccess?: () => Promise<void> | void,
 ) {
   const [isPending, startTransition] = useTransition()
 
@@ -32,6 +34,12 @@ export function useFormState(
       const state = await action(data)
 
       setFormState(state)
+
+      requestFormReset(form)
+
+      if (state.success) {
+        await onSuccess?.()
+      }
     })
   }
 

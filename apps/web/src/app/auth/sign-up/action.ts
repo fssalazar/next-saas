@@ -3,7 +3,7 @@ import { AxiosError } from 'axios'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
-import { CreateAccount } from '@/http/create-account'
+import { createAccount } from '@/http/create-account'
 
 const signUpSchema = z
   .object({
@@ -40,7 +40,7 @@ export async function signUp(data: FormData) {
   const { name, email, password } = result.data
 
   try {
-    await CreateAccount({
+    await createAccount({
       name,
       email,
       password,

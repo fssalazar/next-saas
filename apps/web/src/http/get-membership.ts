@@ -16,7 +16,7 @@ interface GetMembershipResponse {
 }
 
 export async function getMembership({ slug }: GetMembershipRequest) {
-  const { data } = await api.get<GetMembershipResponse>(
+  const data = await api<GetMembershipResponse>(
     `/organizations/${slug}/membership`,
   )
 

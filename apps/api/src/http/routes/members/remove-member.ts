@@ -41,6 +41,7 @@ export async function removeMember(app: FastifyInstance) {
             'You are not allowed to remove this member from the organization',
           )
         }
+        console.log('member not removeddddddddddd')
 
         await prisma.member.delete({
           where: {
@@ -48,7 +49,7 @@ export async function removeMember(app: FastifyInstance) {
             organizationId: organization.id,
           },
         })
-
+        console.log('member removeddddddddddd')
         return reply.status(204).send()
       },
     )

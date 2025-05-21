@@ -6,16 +6,17 @@ interface CreateAccountRequest {
   password: string
 }
 
-type CreateAccountResponse = void
-
-export async function CreateAccount({
+export async function createAccount({
   name,
   email,
   password,
 }: CreateAccountRequest) {
-  await api.post<CreateAccountResponse>('/users', {
-    name,
-    email,
-    password,
+  await api('/users', {
+    method: 'POST',
+    body: JSON.stringify({
+      name,
+      email,
+      password,
+    }),
   })
 }
